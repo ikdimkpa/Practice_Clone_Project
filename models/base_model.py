@@ -5,6 +5,7 @@ BaseModel module that defines all the common attributes/methods
 for other classes
 """
 from datetime import datetime
+import models
 import uuid
 
 
@@ -17,7 +18,7 @@ class BaseModel:
         if kwargs and kwargs != {}:
             for key, value in kwargs.items():
                 if key == "__class__":
-                    del key
+                    pass
                 elif key == "created_at":
                     self.__dict__["created_at"] = datetime.strptime(
                             value, "%Y-%m-%dT%H:%M:%S.%f")
@@ -30,6 +31,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """
@@ -44,6 +46,7 @@ class BaseModel:
         with the current datetime
         """
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """
